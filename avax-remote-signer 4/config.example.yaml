@@ -1,0 +1,43 @@
+# Example configuration for Avalanche Remote Signer
+# Copy this file and customize for your environment
+
+server:
+  # Address to bind the gRPC server
+  address: "0.0.0.0:9090"
+  
+  tls:
+    # IMPORTANT: Always use TLS in production
+    enabled: true
+    cert_file: "/path/to/server-cert.pem"
+    key_file: "/path/to/server-key.pem"
+
+backend:
+  # Backend type: "file", "vault", "awskms", "gcpkms"
+  type: "file"
+  
+  # Backend-specific configuration
+  config:
+    # For file backend (DEVELOPMENT ONLY)
+    key_path: "/secure/path/to/validator-key.json"
+    
+    # For vault backend (example)
+    # address: "https://vault.example.com:8200"
+    # token: "${VAULT_TOKEN}"
+    # key_path: "secret/data/avalanche/validator-key"
+    
+    # For AWS KMS backend (example)
+    # region: "us-east-1"
+    # key_id: "arn:aws:kms:us-east-1:123456789012:key/..."
+    
+    # For GCP KMS backend (example)
+    # project_id: "my-project"
+    # location: "global"
+    # key_ring: "avalanche"
+    # key_name: "validator-key"
+
+logging:
+  # Log level: "debug", "info", "warn", "error"
+  level: "info"
+  
+  # Log format: "console" or "json"
+  format: "console"

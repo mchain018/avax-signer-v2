@@ -1,0 +1,29 @@
+# Simplified Dockerfile using pre-built binary
+# This avoids network issues during build
+
+FROM fcr.fmr.com/library/golang:1.23-alpine
+
+# Create non-root user
+RUN addgroup -g 1000 signer && \
+    adduser -D -u 1000 -G signer signer
+
+WORKDIR /app
+
+# Copy pre-built binary from local build
+COPY avax-remote-signer .
+
+# Change ownership
+RUN chown -R signer:signer /app
+
+# Switch to non-root user
+USER signer
+
+# Expose HTTP API port
+EXPOSE 9090
+
+# Health check using wget (already available in golang-alpine)
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD wget --no-verbose --tries=1 --spider http://localhost:9090/health || exit 1
+
+ENTRYPOINT ["/app/avax-remote-signer"]
+CMD ["--config", "/config/config.yaml"]

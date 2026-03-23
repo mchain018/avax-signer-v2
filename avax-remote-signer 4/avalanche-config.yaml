@@ -1,0 +1,29 @@
+# Avalanche Node Configuration for Remote Signer
+
+# Network settings
+network-id: fuji  # Use Fuji testnet
+
+# P2P settings
+public-ip: ""
+http-host: 0.0.0.0
+http-port: 9650
+
+# Staking settings
+staking-enabled: true
+staking-port: 9651
+
+# Remote signer configuration
+# Point to our remote signer service
+staking-rpc-signer-endpoint: "http://avax-remote-signer:9090"
+
+# Database
+db-dir: /data
+
+# Logging
+log-level: info
+log-display-level: info
+
+# API settings
+api-admin-enabled: false
+api-ipcs-enabled: true
+api-keystore-enabled: false

@@ -1,0 +1,16 @@
+FROM fcr.fmr.com/dockerhub-proxy/alpine:3.19
+
+# Install dependencies
+RUN apk add --no-cache \
+    bash \
+    curl \
+    jq
+
+# Copy simulation script
+COPY simulate-avalanchego.sh /usr/local/bin/simulate-avalanchego
+RUN chmod +x /usr/local/bin/simulate-avalanchego
+
+# Set environment variable for signer URL
+ENV SIGNER_URL=http://avax-remote-signer:9090
+
+CMD ["simulate-avalanchego"]

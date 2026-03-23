@@ -1,0 +1,14 @@
+server:
+  grpc_address: "0.0.0.0:9090"
+  http_address: "0.0.0.0:8080"
+  tls:
+    enabled: false  # Disabled for testing
+
+backend:
+  type: "file"
+  config:
+    key_path: "/keys/test-validator-key.json"
+
+logging:
+  level: "info"
+  format: "json"  # JSON format for container logs

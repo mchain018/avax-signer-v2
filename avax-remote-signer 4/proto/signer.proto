@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+package signer;
+
+option go_package = "github.com/avax-remote-signer/signer/pkg/proto";
+
+// RemoteSigner service defines the interface for remote signing operations
+service RemoteSigner {
+  // Sign signs a message using the validator's BLS private key
+  rpc Sign(SignRequest) returns (SignResponse);
+  
+  // GetPublicKey returns the validator's BLS public key
+  rpc GetPublicKey(PublicKeyRequest) returns (PublicKeyResponse);
+  
+  // HealthCheck verifies the signer is operational
+  rpc HealthCheck(HealthCheckRequest) returns (HealthCheckResponse);
+}
+
+message SignRequest {
+  // The message bytes to sign
+  bytes message = 1;
+  
+  // Optional: key identifier if supporting multiple keys
+  string key_id = 2;
+}
+
+message SignResponse {
+  // The BLS signature bytes
+  bytes signature = 1;
+}
+
+message PublicKeyRequest {
+  // Optional: key identifier if supporting multiple keys
+  string key_id = 1;
+}
+
+message PublicKeyResponse {
+  // The BLS public key bytes
+  bytes public_key = 1;
+}
+
+message HealthCheckRequest {}
+
+message HealthCheckResponse {
+  // Status of the signer service
+  bool healthy = 1;
+  
+  // Optional message with additional info
+  string message = 2;
+}

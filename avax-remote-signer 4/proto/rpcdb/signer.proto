@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package signer;
+
+option go_package = "github.com/avax-remote-signer/signer/proto/rpcdb";
+
+// Based on AvalancheGo's proto/rpcdb/signer.proto interface
+// This matches the interface that avalanchego expects for --staking-rpc-signer-endpoint
+
+service Signer {
+  // Sign signs the given message
+  rpc Sign(SignRequest) returns (SignResponse);
+  
+  // PublicKey returns the public key
+  rpc PublicKey(PublicKeyRequest) returns (PublicKeyResponse);
+  
+  // SignProofOfPossession signs a proof of possession
+  rpc SignProofOfPossession(SignProofOfPossessionRequest) returns (SignProofOfPossessionResponse);
+}
+
+message SignRequest {
+  bytes message = 1;
+}
+
+message SignResponse {
+  bytes signature = 1;
+}
+
+message PublicKeyRequest {}
+
+message PublicKeyResponse {
+  bytes public_key = 1;
+}
+
+message SignProofOfPossessionRequest {}
+
+message SignProofOfPossessionResponse {
+  bytes signature = 1;
+}

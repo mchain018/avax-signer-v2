@@ -1,0 +1,72 @@
+services:
+  # Avalanche Remote Signer
+  avax-remote-signer:
+    image: avax-remote-signer:latest
+    container_name: avax-remote-signer
+    ports:
+      - "9090:9090"  # gRPC port
+      - "8080:8080"  # HTTP port
+    volumes:
+      - ./config-docker.yaml:/config/config.yaml:ro
+      - ./keys:/keys:ro
+    networks:
+      - avalanche-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 3s
+      start_period: 5s
+      retries: 3
+    security_opt:
+      - no-new-privileges:true
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+
+  # Avalanche Node
+  avalanchego:
+    image: fcr.fmr.com/avaplatform/avalanchego:latest
+    platform: linux/amd64
+    container_name: avalanchego
+    ports:
+      - "9650:9650"  # HTTP API
+      - "9651:9651"  # Staking port
+    volumes:
+      - ./avalanche-config.yaml:/root/.avalanchego/configs/node.json:ro
+      - avalanche-data:/data
+    networks:
+      - avalanche-network
+    depends_on:
+      avax-remote-signer:
+        condition: service_healthy
+    environment:
+      - AVAGO_NETWORK_ID=fuji
+      - AVAGO_HTTP_HOST=0.0.0.0
+    command:
+      - "/avalanchego/build/avalanchego"
+      - "--network-id=fuji"
+      - "--http-host=0.0.0.0"
+      - "--staking-rpc-signer-endpoint=avax-remote-signer:9090"
+      - "--staking-signer-key-file="
+      - "--bootstrap-ips="
+      - "--bootstrap-ids="
+      - "--public-ip="
+      - "--log-level=debug"
+      - "--log-display-level=debug"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:9650/ext/health"]
+      interval: 30s
+      timeout: 10s
+      start_period: 60s
+      retries: 5
+
+networks:
+  avalanche-network:
+    driver: bridge
+
+volumes:
+  avalanche-data:
+    driver: local
