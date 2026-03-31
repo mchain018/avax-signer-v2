@@ -12,9 +12,12 @@ import (
 // FileBackend implements SignerBackend using a local file for key storage
 // WARNING: This is for DEVELOPMENT/TESTING only. Do not use in production!
 type FileBackend struct {
-	keyPath string
-	signer  *localsigner.LocalSigner
-	mu      sync.RWMutex
+	keyPath    string
+	signer     *localsigner.LocalSigner
+	publicKey  *bls.PublicKey
+	pkBytes    []byte
+	popCache   *bls.Signature // Cache PoP to ensure it never changes
+	mu         sync.RWMutex
 }
 
 // NewFileBackend creates a new file-based signer backend
@@ -32,10 +35,15 @@ func NewFileBackend(keyPath string) (*FileBackend, error) {
 		return nil, fmt.Errorf("failed to load key: %w", err)
 	}
 
+	// Pre-compute and cache the Proof of Possession once
+	if err := fb.computeAndCachePOP(); err != nil {
+		return nil, fmt.Errorf("failed to compute PoP: %w", err)
+	}
+
 	return fb, nil
 }
 
-// loadKey reads and parses the BLS key from the file
+// loadKey reads and parses the BLS key from the file (only on init)
 func (fb *FileBackend) loadKey() error {
 	fb.mu.Lock()
 	defer fb.mu.Unlock()
@@ -47,6 +55,31 @@ func (fb *FileBackend) loadKey() error {
 	}
 
 	fb.signer = signer.(*localsigner.LocalSigner)
+	
+	// Cache the public key and its bytes
+	fb.publicKey = fb.signer.PublicKey()
+	fb.pkBytes = bls.PublicKeyToCompressedBytes(fb.publicKey)
+	
+	return nil
+}
+
+// computeAndCachePOP pre-computes and caches the PoP to ensure determinism
+func (fb *FileBackend) computeAndCachePOP() error {
+	fb.mu.Lock()
+	defer fb.mu.Unlock()
+
+	if fb.signer == nil {
+		return fmt.Errorf("signer not loaded")
+	}
+
+	// Compute PoP once and cache it
+	// This is deterministic as long as we use the same key and public key bytes
+	sig, err := fb.signer.SignProofOfPossession(fb.pkBytes)
+	if err != nil {
+		return fmt.Errorf("failed to compute PoP: %w", err)
+	}
+
+	fb.popCache = sig
 	return nil
 }
 
@@ -69,6 +102,7 @@ func (fb *FileBackend) Sign(ctx context.Context, message []byte) (*bls.Signature
 }
 
 // SignProofOfPossession implements SignerBackend.SignProofOfPossession using BLS_POP_ domain separation tag
+// Returns the cached PoP which is deterministic and never changes for this validator
 func (fb *FileBackend) SignProofOfPossession(ctx context.Context) (*bls.Signature, error) {
 	fb.mu.RLock()
 	defer fb.mu.RUnlock()
@@ -77,18 +111,13 @@ func (fb *FileBackend) SignProofOfPossession(ctx context.Context) (*bls.Signatur
 		return nil, fmt.Errorf("signer not loaded")
 	}
 
-	// Get the public key bytes (compressed, 48 bytes)
-	pubKey := fb.signer.PublicKey()
-	pkBytes := bls.PublicKeyToCompressedBytes(pubKey)
-
-	// Sign proof of possession using BLS_POP_ DST
-	// This signs the public key bytes with a different domain separation tag
-	sig, err := fb.signer.SignProofOfPossession(pkBytes)
-	if err != nil {
-		return nil, fmt.Errorf("signing proof of possession failed: %w", err)
+	// Return cached PoP - this ensures the PoP is always the same for this validator
+	// The PoP is computed once during initialization and never changes
+	if fb.popCache == nil {
+		return nil, fmt.Errorf("proof of possession not initialized")
 	}
 
-	return sig, nil
+	return fb.popCache, nil
 }
 
 // GetPublicKey implements SignerBackend.GetPublicKey
