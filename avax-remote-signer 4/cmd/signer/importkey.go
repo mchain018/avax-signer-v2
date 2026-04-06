@@ -4,13 +4,12 @@ import (
 	"crypto/rand"
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/spf13/cobra"
 
 	"github.com/ava-labs/avalanchego/utils/crypto/bls"
 	"github.com/ava-labs/avalanchego/utils/crypto/bls/signer/localsigner"
-
-	filebackend "github.com/avax-remote-signer/signer/pkg/backend/file"
 )
 
 var (
@@ -41,9 +40,9 @@ func init() {
 }
 
 func importKey(cmd *cobra.Command, args []string) error {
-	fmt.Println("=" * 80)
+	fmt.Println(strings.Repeat("=", 80))
 	fmt.Println("Avalanche Remote Signer - BLS Key Import/Generation Tool")
-	fmt.Println("=" * 80)
+	fmt.Println(strings.Repeat("=", 80))
 	fmt.Println()
 
 	// Check if file already exists
@@ -117,13 +116,13 @@ func importKey(cmd *cobra.Command, args []string) error {
 	fmt.Println("✓ BLS Key Pair Generated Successfully!")
 	fmt.Println()
 	fmt.Println("KEY DETAILS:")
-	fmt.Println("-" * 80)
+	fmt.Println(strings.Repeat("-", 80))
 	fmt.Printf("Location: %s\n", outputKeyPath)
 	fmt.Printf("Public Key (hex): %x\n", pubKeyBytes)
 	fmt.Printf("Public Key Size: %d bytes\n", len(pubKeyBytes))
 	fmt.Println()
 	fmt.Println("NEXT STEPS:")
-	fmt.Println("-" * 80)
+	fmt.Println(strings.Repeat("-", 80))
 	fmt.Println("1. Secure Storage:")
 	fmt.Printf("   chmod 600 %s\n", outputKeyPath)
 	fmt.Printf("   Backup: cp %s /secure/backup/\n", outputKeyPath)
@@ -143,7 +142,7 @@ func importKey(cmd *cobra.Command, args []string) error {
 	fmt.Println("   ./avax-remote-signer --config config.yaml")
 	fmt.Println()
 	fmt.Println("SECURITY NOTES:")
-	fmt.Println("-" * 80)
+	fmt.Println(strings.Repeat("-", 80))
 	fmt.Println("✓ File contains unencrypted private key - protect it like an SSH key")
 	fmt.Println("✓ Back it up to secure, offline storage")
 	fmt.Println("✓ Never commit to version control")
@@ -151,13 +150,4 @@ func importKey(cmd *cobra.Command, args []string) error {
 	fmt.Println()
 
 	return nil
-}
-
-// Helper function for string repeat (Go doesn't have built-in string multiplication for display)
-func repeatString(s string, count int) string {
-	result := ""
-	for i := 0; i < count; i++ {
-		result += s
-	}
-	return result
 }
