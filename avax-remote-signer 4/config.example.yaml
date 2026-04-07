@@ -41,3 +41,8 @@ logging:
   
   # Log format: "console" or "json"
   format: "console"
+  
+  # Optional: Write logs to file (in addition to stdout)
+  # For Docker, use: /data/logs/signer.log
+  # For local development, use: ./logs/signer.log
+  file: "./logs/signer.log"

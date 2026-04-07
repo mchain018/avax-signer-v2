@@ -1,0 +1,49 @@
+# Binaries and executables
+avax-remote-signer
+*.exe
+*.exe~
+*.dll
+*.so
+*.so.*
+*.dylib
+
+# Test binaries
+*.test
+
+# Build outputs
+dist/
+build/
+
+# Logs and data directories
+logs/
+data/
+*.log
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Dependency directories
+vendor/
+go.sum
+
+# Configuration secrets
+config-local.yaml
+config-prod.yaml
+config.yaml
+
+# Keys and certificates (security)
+*.key
+*.pem
+*.crt
+staker.*
+keys/*.json
+!keys/test-validator-key.json
+
+# Environment files
+.env
+.env.local

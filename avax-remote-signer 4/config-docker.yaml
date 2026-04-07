@@ -7,8 +7,9 @@ server:
 backend:
   type: "file"
   config:
-    key_path: "/keys/test-validator-key.json"
+    key_path: "./keys/validator-key.json"
 
 logging:
   level: "info"
   format: "json"  # JSON format for container logs
+  file: "/data/logs/signer.log"  # Logs written to mounted volume

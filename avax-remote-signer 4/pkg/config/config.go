@@ -38,6 +38,7 @@ type BackendConfig struct {
 type LoggingConfig struct {
 	Level  string `mapstructure:"level"`
 	Format string `mapstructure:"format"` // "json" or "console"
+	File   string `mapstructure:"file"`   // Optional: file path for logging (e.g., "/data/logs/signer.log")
 }
 
 // LoadConfig loads configuration from file and environment
@@ -51,6 +52,7 @@ func LoadConfig(configPath string) (*Config, error) {
 	v.SetDefault("server.tls.enabled", false)
 	v.SetDefault("logging.level", "info")
 	v.SetDefault("logging.format", "console")
+	v.SetDefault("logging.file", "/data/logs/signer.log")
 	v.SetDefault("backend.type", "file")
 
 	// Read from config file if provided

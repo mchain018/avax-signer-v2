@@ -14,6 +14,8 @@ services:
       - ./config-docker.yaml:/config/config.yaml:ro
       # Mount keys directory (read-only for security)
       - ./keys:/keys:ro
+      # Mount logs directory (read-write for logging)
+      - ./logs:/data/logs
     environment:
       # Optional: Override config with environment variables
       - SIGNER_LOG_LEVEL=info

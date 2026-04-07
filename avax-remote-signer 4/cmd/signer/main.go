@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"os/signal"
+	"path/filepath"
 	"syscall"
 
 	"github.com/spf13/cobra"
@@ -130,6 +131,27 @@ func setupLogger(cfg config.LoggingConfig) (*zap.Logger, error) {
 		zapConfig = zap.NewDevelopmentConfig()
 	}
 	zapConfig.Level = zap.NewAtomicLevelAt(level)
+
+	// Configure file output if specified
+	if cfg.File != "" {
+		// Ensure log directory exists
+		logDir := filepath.Dir(cfg.File)
+		if logDir != "" && logDir != "." {
+			if err := os.MkdirAll(logDir, 0755); err != nil {
+				return nil, fmt.Errorf("failed to create log directory: %w", err)
+			}
+		}
+
+		// Add file output paths
+		zapConfig.OutputPaths = []string{
+			"stdout",           // Log to stdout as well
+			cfg.File,           // Log to file
+		}
+		zapConfig.ErrorOutputPaths = []string{
+			"stderr",           // Error goes to stderr
+			cfg.File,           // Error goes to file too
+		}
+	}
 
 	return zapConfig.Build()
 }
