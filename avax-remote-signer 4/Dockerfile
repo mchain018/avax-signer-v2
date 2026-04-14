@@ -1,5 +1,5 @@
 # Multi-stage build for minimal image size
-FROM fcr.fmr.com/library/golang:1.23-alpine AS builder
+FROM golang:1.24-alpine AS builder
 
 # Install build dependencies (including for BLS/blst which requires CGO)
 RUN apk add --no-cache git make gcc musl-dev linux-headers
@@ -17,7 +17,7 @@ COPY . .
 RUN CGO_ENABLED=1 GOOS=linux go build -a -o avax-remote-signer ./cmd/signer
 
 # Final stage - use golang-alpine as runtime to avoid package installation issues
-FROM fcr.fmr.com/library/golang:1.23-alpine
+FROM golang:1.24-alpine
 
 # Create non-root user
 RUN addgroup -g 1000 signer && \

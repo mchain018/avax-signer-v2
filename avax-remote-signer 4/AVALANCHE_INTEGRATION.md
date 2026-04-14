@@ -96,7 +96,7 @@ See [Production Deployment](#production-deployment) section below.
 
 ### Avalanche Node Configuration
 
-Create `avalanche-config.yaml`:
+The Avalanche node configuration is located at `avalanche-config/node.yaml`:
 
 ```yaml
 # Signer configuration

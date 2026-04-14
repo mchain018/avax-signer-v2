@@ -4,6 +4,7 @@
 network-id: fuji  # Use Fuji testnet
 
 # P2P settings
+public-ip-resolution-service: opendns
 public-ip: ""
 http-host: 0.0.0.0
 http-port: 9650
@@ -11,6 +12,9 @@ http-port: 9650
 # Staking settings
 staking-enabled: true
 staking-port: 9651
+
+# State sync settings
+state-sync-enabled: true
 
 # Remote signer configuration
 # Point to our remote signer service

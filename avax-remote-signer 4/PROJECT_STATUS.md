@@ -247,7 +247,8 @@ avax-remote-signer/
 ├── Dockerfile.simple         # Production build
 ├── docker-compose.yml        # Standalone deployment
 ├── docker-compose-avalanche.yaml  # Integrated deployment
-├── avalanche-config.yaml     # Avalanche node config
+├── avalanche-config/
+│    └── node.yaml            # Avalanche node config
 ├── test-avalanche-integration.sh  # Integration tests
 ├── go.mod                    # Go dependencies
 ├── go.sum                    # Dependency checksums
