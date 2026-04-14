@@ -7,7 +7,7 @@ server:
 backend:
   type: "file"
   config:
-    key_path: "/keys/test-validator-key.json"
+    key_path: "/keys/validator-key.json"
 
 logging:
   level: "info"
