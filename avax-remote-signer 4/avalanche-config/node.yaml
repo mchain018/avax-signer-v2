@@ -13,9 +13,6 @@ http-port: 9650
 staking-enabled: true
 staking-port: 9651
 
-# State sync settings
-state-sync-enabled: true
-
 # Remote signer configuration
 # Point to our remote signer service
 staking-rpc-signer-endpoint: "http://avax-remote-signer:9090"
