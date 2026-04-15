@@ -4,8 +4,8 @@
 network-id: fuji  # Use Fuji testnet
 
 # P2P settings
-public-ip-resolution-service: opendns
-public-ip: ""
+public-ip-resolution-service: opendns  # opendns service will automatically detect your public IP when the container starts
+# public-ip: ""
 http-host: 0.0.0.0
 http-port: 9650
 
