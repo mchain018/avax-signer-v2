@@ -30,20 +30,15 @@ services:
     image: avaplatform/avalanchego:latest
     platform: linux/amd64
     container_name: avalanchego
-    ports:
-      - "9650:9650"  # HTTP API
-      - "9651:9651"  # Staking port
+    network_mode: host
     volumes:
       - ./avalanche-config:/root/.avalanchego/configs:ro
       - ./avalanche-data:/data
-    networks:
-      - avalanche-network
     depends_on:
       avax-remote-signer:
         condition: service_healthy
     environment:
       - AVAGO_NETWORK_ID=fuji
-      - AVAGO_HTTP_HOST=0.0.0.0
     command:
       - "/avalanchego/build/avalanchego"
     restart: unless-stopped
