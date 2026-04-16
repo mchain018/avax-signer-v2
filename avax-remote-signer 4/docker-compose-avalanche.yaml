@@ -34,7 +34,7 @@ services:
     network_mode: host
     volumes:
       - ./avalanche-config:/root/.avalanchego/configs:ro
-      - /avalanchego-docker/backup:/root/.avalanchego
+      - avalanche-data:/root/.avalanchego
     depends_on:
       avax-remote-signer:
         condition: service_healthy
