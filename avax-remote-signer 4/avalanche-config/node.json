@@ -6,7 +6,6 @@
   "staking-enabled": true,
   "staking-port": 9651,
   "staking-rpc-signer-endpoint": "http://localhost:9090",
-  "db-dir": "/data",
   "log-level": "info",
   "log-display-level": "info",
   "api-admin-enabled": false,

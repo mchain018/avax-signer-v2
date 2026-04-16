@@ -1,0 +1,36 @@
+# 1. Build the signer
+go build -o avax-remote-signer ./cmd/signer
+
+# 2. Generate BLS key for new validator
+./avax-remote-signer genkey -o ./keys/validator-key.json
+chmod 600 ./keys/validator-key.json
+
+# 3. Create config
+cat > config.yaml << EOF
+server:
+  grpc_address: "0.0.0.0:9092"
+  http_address: "0.0.0.0:8082"
+  tls:
+    enabled: false
+
+backend:
+  type: "file"
+  config:
+    key_path: "./keys/validator-key.json"
+
+logging:
+  level: "info"
+  format: "console"
+EOF
+
+# 4. Start remote signer
+./avax-remote-signer --config config.yaml
+
+# 5. Get the BLS public key (from genkey output)
+# Use it to register a new validator on Avalanche network
+
+# 6. Direct AvalancheGo to use remote signer
+avalanchego \
+  --staking-rpc-signer-endpoint=http://localhost:9092 \
+  --network-id=fuji
+
