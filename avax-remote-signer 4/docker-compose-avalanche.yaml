@@ -12,9 +12,9 @@ services:
     networks:
       - avalanche-network
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/health"]
-      interval: 30s
-      timeout: 3s
+      test: ["CMD", "curl", "-f", "-s", "http://localhost:8080/health"]
+      interval: 60s
+      timeout: 5s
       start_period: 5s
       retries: 3
     security_opt:
@@ -43,11 +43,11 @@ services:
       - "/avalanchego/build/avalanchego"
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:9650/ext/health"]
-      interval: 30s
+      test: ["CMD", "curl", "-f", "-s", "http://localhost:9650/ext/health"]
+      interval: 60s
       timeout: 10s
-      start_period: 60s
-      retries: 5
+      start_period: 120s
+      retries: 3
 
 networks:
   avalanche-network:
