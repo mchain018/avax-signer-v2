@@ -12,7 +12,7 @@ services:
     networks:
       - avalanche-network
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/health"]
+      test: ["CMD", "curl", "-f", "-s", "http://localhost:8080/health"]
       interval: 60s
       timeout: 5s
       start_period: 5s
@@ -40,8 +40,7 @@ services:
         condition: service_healthy
     environment:
       - AVAGO_NETWORK_ID=fuji
-    command:
-      - "/avalanchego/build/avalanchego"
+    command: sh -c "apt-get update && apt-get install -y curl && /avalanchego/build/avalanchego"
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "-s", "http://localhost:9650/ext/health"]
