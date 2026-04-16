@@ -19,6 +19,7 @@ services:
       retries: 3
     security_opt:
       - no-new-privileges:true
+    restart: unless-stopped
     deploy:
       resources:
         limits:
@@ -29,11 +30,11 @@ services:
   avalanchego:
     image: avaplatform/avalanchego:latest
     platform: linux/amd64
-    container_name: avalanchego
+    container_name: avago
     network_mode: host
     volumes:
       - ./avalanche-config:/root/.avalanchego/configs:ro
-      - ./avalanche-data:/data
+      - /avalanchego-docker/backup:/root/.avalanchego
     depends_on:
       avax-remote-signer:
         condition: service_healthy
