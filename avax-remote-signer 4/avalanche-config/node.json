@@ -3,6 +3,7 @@
   "public-ip-resolution-service": "opendns",
   "http-host": "0.0.0.0",
   "http-port": 9650,
+  "public-ip": "50.150.30.3",
   "staking-enabled": true,
   "staking-port": 9651,
   "staking-rpc-signer-endpoint": "http://localhost:9090",

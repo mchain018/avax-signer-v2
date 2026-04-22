@@ -50,7 +50,7 @@ services:
       - |
         apt-get update &&
         apt-get install -y curl &&
-        /avalanchego/build/avalanchego --public-ip=50.150.30.3
+        /avalanchego/build/avalanchego --config-file=/root/.avalanchego/configs/node.json
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "-s", "http://localhost:9650/ext/health"]
