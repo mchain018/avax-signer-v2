@@ -5,7 +5,7 @@
   "public-ip": "50.150.30.3",
   "staking-enabled": true,
   "staking-port": 9651,
-  "staking-rpc-signer-endpoint": "http://localhost:9090",
+  "staking-rpc-signer-endpoint": "http://avax-remote-signer:9090",
   "log-level": "info",
   "log-display-level": "info",
   "api-admin-enabled": false,
