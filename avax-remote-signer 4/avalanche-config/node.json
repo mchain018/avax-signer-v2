@@ -1,6 +1,5 @@
 {
   "network-id": "fuji",
-  "public-ip-resolution-service": "opendns",
   "http-host": "0.0.0.0",
   "http-port": 9650,
   "public-ip": "50.150.30.3",
