@@ -6,8 +6,8 @@
   "staking-enabled": true,
   "staking-port": 9651,
   "staking-rpc-signer-endpoint": "http://localhost:9090",
-  "log-level": "debug",
-  "log-display-level": "debug",
+  "log-level": "info",
+  "log-display-level": "info",
   "api-admin-enabled": false,
   "api-ipcs-enabled": true,
   "api-keystore-enabled": false
