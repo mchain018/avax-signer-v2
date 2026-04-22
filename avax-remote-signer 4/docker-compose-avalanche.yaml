@@ -45,9 +45,7 @@ services:
     environment:
       - AVAGO_NETWORK_ID=fuji
       - AVAGO_HTTP_HOST=50.150.30.3
-    command:
-      - "--http-host=50.150.30.3"
-    command: sh -c "apt-get update && apt-get install -y curl && /avalanchego/build/avalanchego"
+    command: sh -c "apt-get update && apt-get install -y curl && /avalanchego/build/avalanchego --http-host=50.150.30.3"
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "-s", "http://localhost:9650/ext/health"]
