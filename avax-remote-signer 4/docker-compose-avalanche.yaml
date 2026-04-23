@@ -50,6 +50,7 @@ services:
       - |
         apt-get update &&
         apt-get install -y curl &&
+        rm -f /root/.avalanchego/staking/signer.key &&
         /avalanchego/build/avalanchego --config-file=/root/.avalanchego/configs/node.json
     restart: unless-stopped
     healthcheck:
