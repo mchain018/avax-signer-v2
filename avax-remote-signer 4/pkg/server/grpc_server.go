@@ -5,6 +5,7 @@ import (
 
 	pb "github.com/avax-remote-signer/signer/proto/rpcdb"
 	"github.com/avax-remote-signer/signer/pkg/signer"
+	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -16,17 +17,20 @@ import (
 type GRPCServer struct {
 	pb.UnimplementedSignerServer
 	signer *signer.BlsSigner
+	logger *zap.Logger
 }
 
 // NewGRPCServer creates a new gRPC server
-func NewGRPCServer(s *signer.BlsSigner) *GRPCServer {
+func NewGRPCServer(s *signer.BlsSigner, logger *zap.Logger) *GRPCServer {
 	return &GRPCServer{
 		signer: s,
+		logger: logger,
 	}
 }
 
 // Sign implements the Sign RPC method
 func (s *GRPCServer) Sign(ctx context.Context, req *pb.SignRequest) (*pb.SignResponse, error) {
+	s.logger.Info("[Sign] Received signing request from avalanchego", zap.Int("message_length", len(req.Message)))
 	if len(req.Message) == 0 {
 		return nil, status.Error(codes.InvalidArgument, "message cannot be empty")
 	}
@@ -47,6 +51,7 @@ func (s *GRPCServer) Sign(ctx context.Context, req *pb.SignRequest) (*pb.SignRes
 
 // PublicKey implements the PublicKey RPC method
 func (s *GRPCServer) PublicKey(ctx context.Context, req *pb.PublicKeyRequest) (*pb.PublicKeyResponse, error) {
+	s.logger.Info("[PublicKey] Received public key request from avalanchego")
 	// Get public key from signer
 	pubKey, err := s.signer.GetPublicKey(ctx)
 	if err != nil {
@@ -62,13 +67,14 @@ func (s *GRPCServer) PublicKey(ctx context.Context, req *pb.PublicKeyRequest) (*
 }
 
 // RegisterGRPCServer registers the gRPC server with the given gRPC server instance
-func RegisterGRPCServer(grpcServer *grpc.Server, signer *signer.BlsSigner) {
-	pb.RegisterSignerServer(grpcServer, NewGRPCServer(signer))
+func RegisterGRPCServer(grpcServer *grpc.Server, signer *signer.BlsSigner, logger *zap.Logger) {
+	pb.RegisterSignerServer(grpcServer, NewGRPCServer(signer, logger))
 }
 
 // SignProofOfPossession implements the SignProofOfPossession RPC method
 // This MUST use the BLS_POP_ domain separation tag, not BLS_SIG_
 func (s *GRPCServer) SignProofOfPossession(ctx context.Context, req *pb.SignProofOfPossessionRequest) (*pb.SignProofOfPossessionResponse, error) {
+	s.logger.Info("[SignProofOfPossession] Received proof of possession signing request from avalanchego")
 	// Sign proof of possession using the BLS_POP_ DST
 	// This is different from regular signing and is required for validator registration
 	signature, err := s.signer.SignProofOfPossession(ctx)
