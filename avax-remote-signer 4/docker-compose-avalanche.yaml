@@ -28,7 +28,7 @@ services:
 
   # Avalanche Node
   avalanchego:
-    image: avaplatform/avalanchego:latest
+    image: avaplatform/avalanchego:v1.14.2
     platform: linux/amd64
     container_name: avago
     ports:
