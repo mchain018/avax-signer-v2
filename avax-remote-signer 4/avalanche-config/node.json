@@ -2,7 +2,7 @@
   "network-id": "fuji",
   "http-host": "0.0.0.0",
   "http-port": 9650,
-  "public-ip-resolution-service": "ifconfigMe",
+  "public-ip": "50.150.30.3",
   "staking-enabled": true,
   "staking-port": 9651,
   "staking-rpc-signer-endpoint": "avax-remote-signer:9090",
