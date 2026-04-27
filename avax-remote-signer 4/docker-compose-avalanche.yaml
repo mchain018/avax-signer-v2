@@ -32,7 +32,7 @@ services:
     platform: linux/amd64
     container_name: avago
     ports:
-      # - "9650:9650"  # HTTP API
+      - "9650:9650"  # HTTP API
       - "9651:9651"  # Staking port
     networks:
       - avalanche-network
