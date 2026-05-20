@@ -1,0 +1,32 @@
+version: '3.8'
+services:
+  # Avalanche Node
+  avalanchego1:
+    image: avaplatform/avalanchego:v1.14.2
+    platform: linux/amd64
+    container_name: avago1
+    network_mode: "host"
+    volumes:
+      - /home/harsha/avalanche-data:/root/.avalanchego
+    environment:
+      - AVAGO_NETWORK_ID=fuji
+      - AVAGO_HTTP_HOST=0.0.0.0
+      - AVAGO_HTTP_PORT=9652
+      - AVAGO_STAKING_PORT=9653
+      - AVAGO_STATE_SYNC_ENABLED=true
+      - AVAGO_PUBLIC_IP_RESOLUTION_SERVICE=opendns
+      # - AVAGO_PUBLIC_IP=50.150.30.3
+    command:
+      - sh
+      - -c
+      - |
+        apt-get update &&
+        apt-get install -y curl &&
+        /avalanchego/build/avalanchego
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "-s", "http://localhost:9650/ext/health"]
+      interval: 60s
+      timeout: 10s
+      start_period: 120s
+      retries: 3
